@@ -150,11 +150,49 @@ var palindrome = function(string) {
 // modulo(17,5) // 2
 // modulo(22,6) // 4
 var modulo = function(x, y) {
+  if (y === 0) {
+    return NaN;
+  }
+  if (x === 0) {
+    return 0;
+  }
+  var negative = x < 0 ? true : false;
+  x = x > 0 ? x : parseInt(x.toString().substring(1));
+  y = y > 0 ? y : parseInt(y.toString().substring(1));
+  if (x < y && !negative) {
+    return x;
+  } else if (x < y && negative) {
+    return -x;
+  }
+  var currentNum = x - y;
+  if (currentNum === 0) {
+    return 0;
+  } else if (!negative) {
+    return modulo(currentNum, y);
+  } else {
+    return modulo(-currentNum, y)
+  }
 };
 
 // 12. Write a function that multiplies two numbers without using the * operator or
 // Math methods.
 var multiply = function(x, y) {
+  var negative;
+  if (x < 0 && y < 0) {
+    negative = false;
+  } else if (x < 0 || y < 0) {
+    negative = true;
+  }
+
+  if (y === 0) {
+    return 0;
+  }
+  y = y - 1;
+  if (!negative) {
+    return x + multiply(x, y);
+  } else {
+    return -x + multiply(-x, y);
+  }
 };
 
 // 13. Write a function that divides two numbers without using the / operator or
@@ -223,11 +261,35 @@ var countKeysInObj = function(obj, key) {
 // countValuesInObj(obj, 'r') // 2
 // countValuesInObj(obj, 'e') // 1
 var countValuesInObj = function(obj, value) {
+  var count = 0;
+  var keys = Object.keys(obj);
+  keys.forEach(function(currentValue) {
+    if (obj[currentValue] === value) {
+      count++;
+    } else if (typeof obj[currentValue] === 'object') {
+      count = count += countValuesInObj(obj[currentValue], value);
+    }
+  });
+  return count;
 };
 
 // 24. Find all keys in an object (and nested objects) by a provided name and rename
 // them to a provided new name while preserving the value stored at that key.
 var replaceKeysInObj = function(obj, oldKey, newKey) {
+  for (var i in obj) {
+    var currentKey = i;
+      if (currentKey === oldKey) {
+        var currentValue = obj[currentKey];
+        delete obj[currentKey];
+        obj[newKey] = currentValue;
+        if (typeof obj[currentKey] === 'object') {
+          replaceKeysInObj(obj[currentKey], oldKey, newKey);
+        }
+      } else if (typeof obj[currentKey] === 'object') {
+          replaceKeysInObj(obj[currentKey], oldKey, newKey);
+        }
+  }
+  return obj;
 };
 
 // 25. Get the first n Fibonacci numbers. In the Fibonacci sequence, each subsequent
