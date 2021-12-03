@@ -280,21 +280,49 @@ var gcd = function(x, y) {
 // compareStr('house', 'houses') // false
 // compareStr('tomato', 'tomato') // true
 var compareStr = function(str1, str2) {
+    if (str1.length === 0 && str2.length === 0) {
+      return true;
+    } else if (str1[0] === str2[0]) {
+      return compareStr(str1.substring(1), str2.substring(1))
+    } else {
+      return false;
+    }
 };
 
 // 16. Write a function that accepts a string and creates an array where each letter
 // occupies an index of the array.
 var createArray = function(str) {
+  var lettersArr = [];
+  if (str.length === 0) {
+    return lettersArr;
+  } else {
+    lettersArr.push(str[0]);
+    return lettersArr.concat(createArray(str.substring(1)));
+  }
 };
 
 // 17. Reverse the order of an array
 var reverseArr = function(array) {
+  var reversedArray = [];
+  if (array.length === 0) {
+    return reversedArray;
+  } else {
+    reversedArray.push(array[array.length - 1]);
+    return reversedArray.concat(reverseArr(array.slice(0, array.length - 1)));
+  }
 };
 
 // 18. Create a new array with a given value and length.
 // buildList(0,5) // [0,0,0,0,0]
 // buildList(7,3) // [7,7,7]
 var buildList = function(value, length) {
+  var builtArray = [];
+  if (length === 0) {
+    return builtArray;
+  } else {
+    builtArray.push(value);
+    return builtArray.concat(buildList(value, length - 1));
+  }
 };
 
 // 19. Implement FizzBuzz. Given integer n, return an array of the string representations of 1 to n.
@@ -303,17 +331,49 @@ var buildList = function(value, length) {
 // For numbers which are multiples of both three and five, output “FizzBuzz” instead of the number.
 // fizzBuzz(5) // ['1','2','Fizz','4','Buzz']
 var fizzBuzz = function(n) {
+  var fizzedBuzzed = [];
+  if (n === 0) {
+    return fizzedBuzzed;
+  } else if (n % 3 === 0 && n % 5 === 0) {
+    fizzedBuzzed.unshift('FizzBuzz');
+    return fizzBuzz(n - 1).concat(fizzedBuzzed);
+  } else if (n % 5 === 0) {
+    fizzedBuzzed.unshift('Buzz');
+    return fizzBuzz(n - 1).concat(fizzedBuzzed);
+  } else if (n % 3 === 0) {
+    fizzedBuzzed.unshift('Fizz');
+    return fizzBuzz(n - 1).concat(fizzedBuzzed);
+  } else {
+    fizzedBuzzed.unshift(n.toString());
+    return fizzBuzz(n - 1).concat(fizzedBuzzed);
+  }
 };
 
 // 20. Count the occurrence of a value in a list.
 // countOccurrence([2,7,4,4,1,4], 4) // 3
 // countOccurrence([2,'banana',4,4,1,'banana'], 'banana') // 2
 var countOccurrence = function(array, value) {
+  var occurrences = 0;
+  if (array.length === 0) {
+    return occurrences;
+  } else if (array[0] === value) {
+    occurrences ++;
+    return occurrences + countOccurrence(array.slice(1), value);
+  } else {
+    return occurrences + countOccurrence(array.slice(1), value);
+  }
 };
 
 // 21. Write a recursive version of map.
 // rMap([1,2,3], timesTwo); // [2,4,6]
 var rMap = function(array, callback) {
+  var mapped = [];
+  if (array.length === 0) {
+    return mapped;
+  } else {
+    mapped.push(callback(array[0]));
+    return mapped.concat(rMap(array.slice(1), callback));
+  }
 };
 
 // 22. Write a function that counts the number of times a key occurs in an object.
@@ -321,6 +381,17 @@ var rMap = function(array, callback) {
 // countKeysInObj(obj, 'r') // 1
 // countKeysInObj(obj, 'e') // 2
 var countKeysInObj = function(obj, key) {
+  var count = 0;
+  var keys = Object.keys(obj);
+  keys.forEach(function(currentKey) {
+    if (currentKey === key) {
+      count ++;
+    }
+    if (typeof obj[currentKey] === 'object') {
+      count = count += countKeysInObj(obj[currentKey], key);
+    }
+  })
+  return count;
 };
 
 // 23. Write a function that counts the number of times a value occurs in an object.
