@@ -178,26 +178,74 @@ var modulo = function(x, y) {
 // Math methods.
 var multiply = function(x, y) {
   var negative;
+  var product = 0;
   if (x < 0 && y < 0) {
+    x = x - x - x;
+    y = y - y - y;
     negative = false;
   } else if (x < 0 || y < 0) {
     negative = true;
+    if (x < 0) {
+      x = x - x - x;
+    } else {
+      y = y - y - y;
+    }
+  } else {
+    negative = false;
   }
 
   if (y === 0) {
-    return 0;
-  }
-  y = y - 1;
-  if (!negative) {
-    return x + multiply(x, y);
-  } else {
-    return -x + multiply(-x, y);
+    return product;
+  } else if (y >= 1) {
+    y = y - 1;
+    if(negative) {
+      product -= x;
+      return product + multiply(-x, y);
+    } else {
+      product += x;
+      return product + multiply(x, y);
+    }
   }
 };
 
 // 13. Write a function that divides two numbers without using the / operator or
 // Math methods to arrive at an approximate quotient (ignore decimal endings).
 var divide = function(x, y) {
+    if (x === 0 && y === 0) {
+      return NaN;
+    }
+    var quotient = 0;
+    var negative;
+    if (x < 0 && y < 0) {
+      x = x - x - x;
+      y = y - y - y;
+      negative = false;
+    } else if (x < 0 || y < 0) {
+      negative = true;
+      if (x < 0) {
+        x = x - x - x;
+      } else {
+        y = y - y - y;
+      }
+    } else {
+      negative = false;
+    }
+
+    if (x === 0 || x < y) {
+      if (negative) {
+        return quotient - quotient - quotient;
+      } else {
+        return quotient;
+      }
+    } else {
+      x = x - y;
+      if (negative) {
+        quotient --;
+        return quotient + divide(-x, y)
+      }
+      quotient ++;
+      return quotient + divide(x, y)
+    }
 };
 
 // 14. Find the greatest common divisor (gcd) of two positive numbers. The GCD of two
@@ -206,6 +254,25 @@ var divide = function(x, y) {
 // http://www.cse.wustl.edu/~kjg/cse131/Notes/Recursion/recursion.html
 // https://www.khanacademy.org/computing/computer-science/cryptography/modarithmetic/a/the-euclidean-algorithm
 var gcd = function(x, y) {
+  if (x === y) {
+    return x;
+  } else if (x < 0 || y < 0) {
+    return null;
+  } else if (x < y) {
+    var xmod = y % x;
+    if (xmod === 0) {
+      return x;
+    } else {
+      return gcd(x, xmod)
+    }
+  } else {
+    var ymod = x % y;
+    if (ymod === 0) {
+      return y;
+    } else {
+      return gcd(ymod, y);
+    }
+  }
 };
 
 // 15. Write a function that compares each character of two strings and returns true if
